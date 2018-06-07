@@ -1,4 +1,4 @@
-import { Generator, RenderResult } from '../teleport-lib-js'
+import { Generator, RenderResult } from 'teleport-lib-js'
 import NuxtComponentGenerator from './generators/component'
 import NuxtProjectGenerator from './generators/project'
 
