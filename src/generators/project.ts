@@ -1,4 +1,5 @@
-import { ProjectGenerator, Generator, RenderResult } from 'teleport-lib-js'
+import { ProjectGenerator, Generator, FileSet } from 'teleport-lib-js'
+
 import TeleportGeneratorNuxt from '../index'
 import packageRenderer from '../renderers/package'
 import NuxtComponentGenerator from './component'
@@ -12,10 +13,10 @@ export default class NuxtProjectGenerator extends ProjectGenerator {
     this.componentGenerator = componentGenerator
   }
 
-  public generate(project: any, options: any = {}): RenderResult {
+  public generate(project: any, options: any = {}): FileSet {
     const { name, components, pages } = project
 
-    const result = new RenderResult()
+    const result = new FileSet()
     result.addFile(
       'package.json',
       packageRenderer(project)
