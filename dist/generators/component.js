@@ -29,7 +29,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var _ = require("lodash");
 var formatter = require("vue-formatter");
-var teleport_lib_js_1 = require("teleport-lib-js");
+var teleport_lib_js_1 = require("@teleporthq/teleport-lib-js");
 var template_1 = require("../renderers/template");
 var component_1 = require("../renderers/component");
 function findNextIndexedKeyInObject(object, key) {
@@ -68,7 +68,6 @@ var VueComponentGenerator = /** @class */ (function (_super) {
         return { styles: styles, content: content };
     };
     VueComponentGenerator.prototype.computeDependencies = function (content) {
-        var _a, _b;
         var _this = this;
         var dependencies = {};
         var source = content.source, type = content.type, children = content.children, otherProps = __rest(content, ["source", "type", "children"]);
@@ -113,6 +112,7 @@ var VueComponentGenerator = /** @class */ (function (_super) {
             }
         }
         return dependencies;
+        var _a, _b;
     };
     VueComponentGenerator.prototype.renderComponentTemplate = function (content) {
         var _this = this;
