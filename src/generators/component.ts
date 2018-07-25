@@ -1,8 +1,6 @@
-import union from 'lodash/union'
-import upperFirst from 'lodash/upperFirst'
-
+import upperFirst = require('lodash/upperFirst')
+import union = require('lodash/union')
 import { ComponentGenerator, Generator, FileSet } from '@teleporthq/teleport-lib-js'
-
 import TeleportGeneratorVue from '../index'
 import TEMPLATErenderer from '../renderers/template'
 import COMPONENTrenderer from '../renderers/component'
