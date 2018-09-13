@@ -1,6 +1,7 @@
+import { join } from 'path'
 import { Project } from '@teleporthq/teleport-lib-js/dist/types'
 import upperFirst from 'lodash/upperFirst'
-import { join } from 'path'
+import { PACKAGE_CONFIG, ESLIT_CONFIG, CONFIG_FILE_BUILD } from '../constants'
 
 export default class NuxtFilesGenerator {
   public static generateStyleFileFromMeta(targets: any): any {
@@ -12,45 +13,24 @@ export default class NuxtFilesGenerator {
   }
 
   public static generateNuxtPackage(projectSlug: string): string {
-    const pkg = {
-      author: 'Unknown',
-      dependencies: {
-        nuxt: '^1.0.0',
-      },
-      devDependencies: {
-        'babel-eslint': '^8.2.1',
-        eslint: '^4.15.0',
-        'eslint-friendly-formatter': '^3.0.0',
-        'eslint-loader': '^1.7.1',
-        'eslint-plugin-vue': '^4.0.0',
-      },
-      name: projectSlug,
-      scripts: {
-        build: 'nuxt build',
-        dev: 'nuxt',
-        generate: 'nuxt generate',
-        lint: 'eslint --ext .js,.vue --ignore-path .gitignore .',
-        precommit: 'npm run lint',
-        start: 'nuxt start',
-      },
-      version: '1.0.0',
-    }
+    const pkg = PACKAGE_CONFIG
+    pkg.name = projectSlug
     return JSON.stringify(pkg, null, 2)
   }
 
   public static generateNuxtConfigFile(project: Project, includeESLintRules: boolean, options: any): string {
     const head = getConfigFileHead(project)
     const routes = generateProjectRoutes(project.pages, options.pagesPath)
-    const build = includeESLintRules ? getConfigFileBuild() : ''
+    const build = includeESLintRules ? CONFIG_FILE_BUILD : ''
     const loading = JSON.stringify({ color: '#3B8070' })
 
     return `
       module.exports = {
         head: ${head},
+        router: { extendRoutes(routes) { ${routes} } },
         /*
         ** Customize the progress bar color
         */
-        router: { extendRoutes(routes) { ${routes} } },
         loading: ${loading},
         css: [ "~${options.assetsUrl}/css/main.css" ],
         build: { ${build} }
@@ -59,7 +39,7 @@ export default class NuxtFilesGenerator {
   }
 
   public static generateNuxtESLintFile(): string {
-    const config = getESLintFileContent()
+    const config = JSON.stringify(ESLIT_CONFIG, null, 2)
     return `module.exports = ${config} `
   }
 }
@@ -102,36 +82,4 @@ function generateProjectRoutes(projectPages: any, pagesPath: string): string {
     return `routes.push(${JSON.stringify(route)})`
   })
   return routes.join('\n')
-}
-
-function getConfigFileBuild(): string {
-  return `
-    extend(config, { isDev, isClient }) {
-      if (isDev && isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
-    }
-  `
-}
-
-function getESLintFileContent(): string {
-  const lintConfig = {
-    root: true,
-    env: {
-      browser: true,
-      node: true,
-    },
-    parserOptions: {
-      parser: 'babel-eslint',
-    },
-    extends: ['plugin:vue/essential'],
-    plugins: ['vue'],
-    rules: {},
-  }
-  return JSON.stringify(lintConfig, null, 2)
 }
