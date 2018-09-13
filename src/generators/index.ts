@@ -1,4 +1,16 @@
+import { Project } from '@teleporthq/teleport-lib-js/dist/types'
+import upperFirst from 'lodash/upperFirst'
+import { join } from 'path'
+
 export default class NuxtFilesGenerator {
+  public static generateStyleFileFromMeta(targets: any): any {
+    if (!targets || !targets.web || !targets.web.head) {
+      return ''
+    }
+    const styles = targets.web.head.filter((target) => target.tagName === 'style').map((target) => target.innerString)
+    return styles.join('\n')
+  }
+
   public static generateNuxtPackage(projectSlug: string): string {
     const pkg = {
       author: 'Unknown',
@@ -26,8 +38,9 @@ export default class NuxtFilesGenerator {
     return JSON.stringify(pkg, null, 2)
   }
 
-  public static generateNuxtConfigFile(projectSlug: string, includeESLintRules: boolean): string {
-    const head = getConfigFileHead(projectSlug)
+  public static generateNuxtConfigFile(project: Project, includeESLintRules: boolean, options: any): string {
+    const head = getConfigFileHead(project)
+    const routes = generateProjectRoutes(project.pages, options.pagesPath)
     const build = includeESLintRules ? getConfigFileBuild() : ''
     const loading = JSON.stringify({ color: '#3B8070' })
 
@@ -37,7 +50,9 @@ export default class NuxtFilesGenerator {
         /*
         ** Customize the progress bar color
         */
+        router: { extendRoutes(routes) { ${routes} } },
         loading: ${loading},
+        css: [ "~${options.assetsUrl}/css/main.css" ],
         build: { ${build} }
       }
     `
@@ -49,12 +64,44 @@ export default class NuxtFilesGenerator {
   }
 }
 
-function getConfigFileHead(projectSlug: string): string {
-  const head = {
-    title: projectSlug,
-    meta: [{ charset: 'utf-8' }, { name: 'viewport', content: 'width=device-width, initial-scale=1' }],
+function getConfigFileHead(project: Project): string {
+  const metaFile = getProjectMeta(project.targets)
+  metaFile.title = project.accountSlug
+  return JSON.stringify(metaFile, null, 2)
+}
+
+function getProjectMeta(targets: any): any {
+  if (!targets || !targets.web || !targets.web.head) {
+    return {}
   }
-  return JSON.stringify(head, null, 2)
+  const meta = {}
+  targets.web.head.forEach(({ innerString, attributes, tagName }) => {
+    if (tagName === 'style') {
+      return
+    }
+    if (innerString) {
+      meta[tagName] = innerString
+      return
+    }
+    if (!meta[tagName]) {
+      meta[tagName] = []
+    }
+    meta[tagName].push(attributes)
+  })
+  return meta
+}
+
+function generateProjectRoutes(projectPages: any, pagesPath: string): string {
+  const routes = Object.keys(projectPages).map((page) => {
+    const pagePath = join(pagesPath, upperFirst(page))
+    const route = {
+      name: page,
+      path: `/${projectPages[page].url}`,
+      component: `${pagePath}.vue`,
+    }
+    return `routes.push(${JSON.stringify(route)})`
+  })
+  return routes.join('\n')
 }
 
 function getConfigFileBuild(): string {

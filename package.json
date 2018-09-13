@@ -39,7 +39,7 @@
     "prettier": "^1.13.6"
   },
   "dependencies": {
-    "@teleporthq/teleport-lib-js": "0.1.7",
+    "@teleporthq/teleport-lib-js": "0.1.9",
     "teleport-generator-vue": "git+ssh://git@gitlab.com/teleporthq/teleport-generator-vue.git#vue_new_version",
     "lodash": "^4.17.10"
   }

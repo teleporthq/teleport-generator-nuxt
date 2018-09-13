@@ -3,6 +3,7 @@ import TeleportGeneratorVue from 'teleport-generator-vue'
 import { Project, Component, ProjectGeneratorOptions, ComponentGeneratorOptions } from '@teleporthq/teleport-lib-js/dist/types'
 import { NuxtProjectGeneratorOptions } from './types'
 import NuxtFilesGenerator from './generators'
+import { join } from 'path'
 
 export default class TeleportGeneratorNuxt extends TeleportGeneratorVue {
   constructor(name?: string, targetName?: string, customRenderers?: { [key: string]: ComponentCodeGenerator }) {
@@ -22,7 +23,7 @@ export default class TeleportGeneratorNuxt extends TeleportGeneratorVue {
     }
 
     if (generateConfigFile || generateAllFiles) {
-      result.merge(this.generateConfigFile(project.slug, generateESLintFile))
+      result.merge(this.generateConfigFile(project, generateESLintFile, { ...projectGeneratorOptions }))
     }
 
     if (generateESLintFile || generateAllFiles) {
@@ -39,10 +40,14 @@ export default class TeleportGeneratorNuxt extends TeleportGeneratorVue {
     return result
   }
 
-  private generateConfigFile(projectSlug: string, includeESLintRules: boolean): FileSet {
+  private generateConfigFile(project: Project, includeESLintRules: boolean, options: any): FileSet {
     const result = new FileSet()
-    const configFile = NuxtFilesGenerator.generateNuxtConfigFile(projectSlug, includeESLintRules)
+    const configFile = NuxtFilesGenerator.generateNuxtConfigFile(project, includeESLintRules, options)
+    const styleFile = NuxtFilesGenerator.generateStyleFileFromMeta(project.targets)
+    const cssPath = join(options.assetsUrl, 'css', 'main.css')
+
     result.addFile('nuxt.config.js', configFile)
+    result.addFile(cssPath, styleFile)
     return result
   }
 
