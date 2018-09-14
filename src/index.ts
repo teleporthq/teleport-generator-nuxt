@@ -1,5 +1,5 @@
 import { FileSet, ComponentCodeGenerator } from '@teleporthq/teleport-lib-js'
-import TeleportGeneratorVue from 'teleport-generator-vue'
+import TeleportGeneratorVue from '@teleporthq/teleport-generator-vue'
 import { Project, Component, ProjectGeneratorOptions, ComponentGeneratorOptions } from '@teleporthq/teleport-lib-js/dist/types'
 import { NuxtProjectGeneratorOptions } from './types'
 import NuxtFilesGenerator from './generators'

@@ -73,9 +73,9 @@ function getProjectMeta(targets: any): any {
 function generateProjectRoutes(projectPages: any, pagesPath: string): string {
   const routes = Object.keys(projectPages).map((page) => {
     const route = {
+      component: `${pagesPath}/${upperFirst(page)}.vue`,
       name: page,
       path: `/${projectPages[page].url}`,
-      component: `${pagesPath}/${upperFirst(page)}.vue`,
     }
     return `routes.push(${JSON.stringify(route)})`
   })

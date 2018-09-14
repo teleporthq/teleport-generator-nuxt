@@ -28,12 +28,12 @@ export const ESLIT_CONFIG: ESLintConfig = {
     browser: true,
     node: true,
   },
+  extends: ['plugin:vue/essential'],
   parserOptions: {
     parser: 'babel-eslint',
   },
-  root: true,
-  extends: ['plugin:vue/essential'],
   plugins: ['vue'],
+  root: true,
   rules: {},
 }
 
