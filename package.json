@@ -7,7 +7,7 @@
   "scripts": {
     "start": "tsc -w",
     "build": "npm run clean && tsc",
-    "link-dev": "npm link ../teleport-lib-js",
+    "link-dev": "npm link ../teleport-lib-js && npm link ../teleport-generator-vue",
     "clean": "rm -rf dist",
     "lint": "tslint -p ./",
     "test": "jest",
@@ -39,7 +39,8 @@
     "prettier": "^1.13.6"
   },
   "dependencies": {
-    "@teleporthq/teleport-lib-js": "^0.0.15",
+    "@teleporthq/teleport-lib-js": "0.1.9",
+    "teleport-generator-vue": "git+ssh://git@gitlab.com/teleporthq/teleport-generator-vue.git#vue_new_version",
     "lodash": "^4.17.10"
   }
 }
