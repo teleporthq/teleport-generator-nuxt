@@ -1,4 +1,3 @@
-import { join } from 'path'
 import { Project } from '@teleporthq/teleport-lib-js/dist/types'
 import upperFirst from 'lodash/upperFirst'
 import { PACKAGE_CONFIG, ESLIT_CONFIG, CONFIG_FILE_BUILD } from '../constants'
@@ -73,11 +72,10 @@ function getProjectMeta(targets: any): any {
 
 function generateProjectRoutes(projectPages: any, pagesPath: string): string {
   const routes = Object.keys(projectPages).map((page) => {
-    const pagePath = join(pagesPath, upperFirst(page))
     const route = {
       name: page,
       path: `/${projectPages[page].url}`,
-      component: `${pagePath}.vue`,
+      component: `${pagesPath}/${upperFirst(page)}.vue`,
     }
     return `routes.push(${JSON.stringify(route)})`
   })
