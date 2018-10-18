@@ -40,7 +40,6 @@ describe('Nuxt generator', () => {
     const target = new Target('nuxt')
     const options = {
       target,
-      generateAllFiles: true,
       generatePackageFile: true,
       generateConfigFile: true,
       generateESLintFile: true,
