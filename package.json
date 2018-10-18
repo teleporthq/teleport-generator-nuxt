@@ -39,8 +39,9 @@
     "prettier": "^1.13.6"
   },
   "dependencies": {
-    "@teleporthq/teleport-lib-js": "0.1.9",
     "@teleporthq/teleport-generator-vue": "0.1.1",
+    "@teleporthq/teleport-lib-js": "0.1.10",
+    "@types/node": "^10.12.0",
     "lodash": "^4.17.10"
   }
 }
